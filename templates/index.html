@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">お仕事マネージャーくん</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <button class="btn btn-outline-success me-2" onclick="checkLogin()" type="button">ログイン</button>
+                    <button class="btn btn-outline-secondary me-2" onclick="checkLogout()" type="button">ログアウト</button>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="n1-home" aria-current="page" href="/#home">ホーム</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="n1-check" href="/#check">シフト確認</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="n1-input" href="/#input">シフト入力</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="n1-edit" href="/#edit">シフト管理</a>
+            </ul>
+            <span class="navbar-text">
+                    {% if is_authorized %}
+                        ユーザー：{{fullname}}
+                    {% else %}
+                        ユーザー：非ログイン
+                    {% endif %}
+            </span>
+        </div>
+    </div>
+</nav>
+
+{% autoescape off %}
+    {{ message }}
+{% endautoescape %}
+
+<!-- spacer -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="spacer"></div>
+        </div>
+    </div>
+</div>
+
+<!-- page title center -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center" id="title"></h1>
+        </div>
+    </div>
+</div>
+
+<!-- spacer -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="spacer"></div>
+        </div>
+    </div>
+</div>
+
+<!-- page description -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <p class="text-center">
+                せつめいらん〜
+                <br>
+                かいぎょうも〜〜〜〜
+            </p>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    function checkLogin() {
+        cookies = document.cookie;
+        location.href = '{% url 'Login' %}'
+    }
+
+    function checkLogout() {
+        cookies = document.cookie;
+        location.href = '{% url 'Logout' %}'
+    }
+
+    const hashChange = () => {
+        let a_home = document.getElementById('n1-home');
+        let a_check = document.getElementById('n1-check');
+        let a_input = document.getElementById('n1-input');
+        let a_edit = document.getElementById('n1-edit');
+        let list = [a_home, a_check, a_input, a_edit];
+        for (let i = 0; i < list.length; i++) {
+            list[i].classList.remove('active');
+        }
+
+        let title = document.getElementById('title');
+
+        if (location.hash === "#home") {
+            a_home.classList.add('active');
+            title.innerText = "ホーム";
+        } else if (location.hash === "#check") {
+            a_check.classList.add('active');
+            title.innerText = "シフト確認";
+        } else if (location.hash === "#input") {
+            a_input.classList.add('active');
+            title.innerText = "シフト入力";
+        } else if (location.hash === "#edit") {
+            a_edit.classList.add('active');
+            title.innerText = "シフト管理";
+        } else if (location.url === "/login") {
+            title.innerText = "ログイン";
+        } else {
+            title.innerText = "ホーム";
+            a_home.classList.add('active');
+        }
+    }
+
+    window.addEventListener('hashchange', hashChange, false);
+    window.addEventListener('load', hashChange, false);
+</script>
+</body>
+</html>
